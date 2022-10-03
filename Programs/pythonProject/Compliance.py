@@ -3,11 +3,13 @@ from tkinter import simpledialog
 from tkinter import messagebox
 
 #   Global variables
-
+name = ""
 ecu_entry = ""
 variant_entry = ""
 supplier_entry = ""
 protocol_entry = ""
+cda_version = ""
+mdp_version = ""
 excelSheet = ""
 
 protocols = [
@@ -19,6 +21,10 @@ protocols = [
     'CS.00101',
     'TFO 07287'
 ]
+
+mdp_releases = ['0.3','0.65','0.95','1.0.3','1.0.6']
+cda_releases = ['6.14.15x','6.15.12x','6.15.13x','6.15.14x','6.15.15x','6.15.16x']
+
 
 
 def infoWindow(title, message):
@@ -78,7 +84,7 @@ def openExcelSheetSelectWindow(sheets):
 def openComplianceWindow():
     root = Tk()
     root.wm_title('Checklist Protocol Compliance Generator')
-    root.geometry('480x240')
+    root.geometry('880x320')
 
     def mainExit(*args):
         global ecu_entry
@@ -100,9 +106,17 @@ def openComplianceWindow():
         supplier_entry = customer.get()
         global protocol_entry
         protocol_entry = variable.get()
+        global cda_version
+        cda_version = cda_vers.get()
+        global mdp_version
+        mdp_version = mdp_vers.get()
+        global name
+        name = fullName.get()
         root.destroy()
 
     variable = StringVar(root)
+    mdp_vers = StringVar(root)
+    cda_vers = StringVar(root)
     variable.set(protocols[0])
 
     L1 = Label(root, text='ECU',background='blue',foreground='yellow')
@@ -126,8 +140,23 @@ def openComplianceWindow():
     protocolMenu = OptionMenu(root, variable, *protocols)
     protocolMenu.grid(row=3,column=1,pady=10)
 
+    L5 = Label(root, text='MDP version (Optional)',background='blue',foreground='yellow')
+    L5.grid(row=3,column=2,pady=10)
+    mdp_version = OptionMenu(root,mdp_vers,*mdp_releases)
+    mdp_version.grid(row=3,column=3,pady=10)
+
+    L6 = Label(root, text='CDA version (Optional)', background='blue', foreground='yellow')
+    L6.grid(row=4, column=0, pady=10)
+    mdp_version = OptionMenu(root, cda_vers, *cda_releases)
+    mdp_version.grid(row=4, column=1, pady=10)
+
+    L7 = Label(root, text='Name (Optional)', background='blue', foreground='yellow')
+    L7.grid(row=4, column=2, pady=10)
+    fullName = Entry(root,width=25)
+    fullName.grid(row=4, column=3, pady=10)
+
     Label(root, text="Click 'Ok' once all fields are filled in").grid(
-        row=4, column=1
+        row=5, column=1
     )
 
     okay_button = Button(root, text="Ok", command=closeWindow)
